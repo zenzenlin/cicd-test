@@ -24,6 +24,8 @@ jobs:
 
       - name: Install pnpm
         uses: pnpm/action-setup@v4
+        with:
+          version: 9 # 明確指定版本
           
       - name: build
         run: pnpm run build
