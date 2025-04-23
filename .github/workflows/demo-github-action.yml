@@ -1,5 +1,5 @@
-name: GitHub Actions Demo
-run-name: GitHub Actions Demo
+name: GitHub Actions Deployment Demo
+run-name: GitHub Actions Deployment Demo
 
 # 觸發此 action 的時機
 on:
@@ -10,7 +10,25 @@ on:
 
 # 預先定義此 action 要幹嘛
 jobs:
-  demo:
+  deploy:
+    name: deploy GH pages
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        
+      - name: Setup node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 20.x
+          
+      - name: Install and build
+        run: pnpm install && pnpm run build
+        
+      - name: Deploy
+        uses: JamesIves/github-pages-deploy-action@4.1.1
+        with:
+          branch: gh-pages
+          folder: dist
+
       - run: echo '執行成功'
