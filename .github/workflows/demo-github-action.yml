@@ -29,7 +29,7 @@ jobs:
           version: 9 # 明確指定版本
           
       - name: Install dependencies (using pnpm ci for CI robustness)
-        run: pnpm ci
+        run: pnpm install --frozen-lockfile
         
       - name: Run lint check
         run: pnpm run lint
@@ -50,7 +50,7 @@ jobs:
           
       - name: Install pnpm and Build (Use pnpm ci for build context)
         # 在部署 Job 中，只執行安裝與建構，然後交給 Deploy Action
-        run: pnpm ci && pnpm run build
+        run: pnpm install --frozen-lockfile && pnpm run build
         
       - name: Deploy
         uses: JamesIves/github-pages-deploy-action@v4.5.3
