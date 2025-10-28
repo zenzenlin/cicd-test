@@ -10,3 +10,8 @@ Currently, two official plugins are available:
 ## Expanding the ESLint configuration
 
 If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+
+針對 CI/CD 流程製作骨架，將建構和部署過程，寫成一個 YAML 檔案。
+目前只包含:
+- 推送 commit 會自動觸發
+- 沒有加入 Lint/Test 的執行
