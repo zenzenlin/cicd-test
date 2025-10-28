@@ -4,19 +4,20 @@ run-name: GitHub Actions Deployment Demo
 # 觸發此 action 的時機
 on:
   push:
-    branches:  # 只要有任何一個 commit 被 push，就會觸發此 action
-      '*'
+    branches:  # 'main' 分支有 commit 被 push，就會觸發此 action
+      'main'
   workflow_dispatch:  # 可以手動執行此 action
 
 # 預先定義此 action 要幹嘛
 jobs:
-  deploy:
-    name: deploy GH pages
+  # ** CI Job **
+  ci:
+    name: Run Lints and Tests
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-        
+
       - name: Setup node
         uses: actions/setup-node@v3
         with:
@@ -27,11 +28,32 @@ jobs:
         with:
           version: 9 # 明確指定版本
           
-      - name: Install and build
-        run: pnpm install && pnpm run build
+      - name: Install dependencies (using pnpm ci for CI robustness)
+        run: pnpm ci
+        
+      - name: Run lint check
+        run: pnpm run lint
+
+  # ** CD Job **
+  deploy:
+    name: deploy GH pages
+    runs-on: ubuntu-latest
+    needs: [ci] # 確保 CI 通過後才執行 CD
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        
+      - name: Setup node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 20.x
+          
+      - name: Install pnpm and Build (Use pnpm ci for build context)
+        # 在部署 Job 中，只執行安裝與建構，然後交給 Deploy Action
+        run: pnpm ci && pnpm run build
         
       - name: Deploy
-        uses: JamesIves/github-pages-deploy-action@4.1.1
+        uses: JamesIves/github-pages-deploy-action@v4.5.3
         with:
           branch: gh-pages
           folder: dist
