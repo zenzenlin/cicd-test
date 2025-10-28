@@ -47,6 +47,11 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: 20.x
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9 # 明確指定版本
           
       - name: Install pnpm and Build (Use pnpm ci for build context)
         # 在部署 Job 中，只執行安裝與建構，然後交給 Deploy Action
